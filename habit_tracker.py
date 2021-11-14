@@ -487,6 +487,4 @@ if __name__ == '__main__':
 	h = Habit()
 
 	h.main_menu()
-
-
-	## Exit capabilities. 
+	

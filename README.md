@@ -39,3 +39,25 @@ Lunch the app using Python.
 ```bash
 py habit_tracker.py
 ```
+
+## Usage
+
+
+The Habit Tracker app comes with a default user (username: 'root', password: 'root'). The account root has 5 predefine habits and 4 weeks of tracked data. This account could be used by a potential new user to explore the app capabilities without the necesity of creating a personal account. 
+
+First, the user will encounter a login menu with a login and sign-up option. New users will have to create an account first, and then login with their credentials.
+
+After a succesful login the user will see a main menu with 4 options:
+
+- Check-off: check-off performed habits.
+- Add: Add a new habit.
+- Remove: Remove a habit.
+- Analytics: Analytics module.
+
+The Analytics module offers a submenu with different analytics capabilities.
+
+- Current habits.
+- Habits by periodicity.
+- Streak by habit.
+- Historical longest streak.
+- Check-off habit log.

@@ -2,6 +2,14 @@
 
 Habit Tracker allow its users to create, remove and keep track of habits. A habit is any activity that is perform with a certain frequency within a given period of time. Habit Tracker also has analytics capabilities, allowing users to examine their habits in more details. 
 
+## Technologies
+
+Project created with:
+
+- Python version: 3.9.7
+
+## Requeriments
+- Pandas version: 1.3.4
 
 ## Installation
 
@@ -61,3 +69,4 @@ The Analytics module offers a submenu with different analytics capabilities.
 - Streak by habit.
 - Historical longest streak.
 - Check-off habit log.
+

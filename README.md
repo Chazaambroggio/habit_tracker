@@ -5,11 +5,11 @@ Habit Tracker allow its users to create, remove and keep track of habits. A habi
 
 ## Installation
 
-To install habit tracker you must have [Python 3] (https://www.python.org/downloads/) and [GIT] (https://git-scm.com/downloads) installed in your pc.
+To install Habit Tracker you must have [Python 3](https://www.python.org/downloads/) and [GIT](https://git-scm.com/downloads) installed in your pc.
 
 The following instructions only apply to windows machines. 
 
-Download the app files from the following Github repository.
+Download the app's files from the following Github repository.
 
 ```bash
 git clone https://github.com/Chazaambroggio/habit_tracker.git

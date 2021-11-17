@@ -31,7 +31,7 @@ class Habit():
 	
 	def adjust_habits_periods(self):
 		''' Function to adjust habit periods.'''
-			
+
 		habit_dates = self.cursor.execute("SELECT habit_id, period, frequency, period_start, frequency_count FROM habit_details").fetchall()
 
 		# Obtain detail of each habit.
@@ -47,16 +47,11 @@ class Habit():
 				
 			self.frequency_count = row[4]
 
-
 			# converting str into datetime.datetime
 			self.period_start = datetime.strptime(self.period_start,'%Y-%m-%d %H:%M:%S.%f')
 
 			self.today = datetime.now()
 		
-			# checking for status.
-			self.check_habit_status()
-
-
 			# Rescheduling period_start and period_end 
 			# to be able to check for frequency accordinly.
 			# While loop to reschedule as many times as needed.
@@ -66,7 +61,13 @@ class Habit():
 
 				self.period_end = self.period_start + timedelta(days = self.period)
 
-				period_update =	"UPDATE habit_details SET period_start = \'" + str(self.period_start) + "\', period_end = \'" + str(self.period_end) + "\'  WHERE habit_id = \'" + self.habit_id + "\';"
+				# Check for habit status.
+				self.check_habit_status()
+
+				# Reset frequency_count for new period.
+				self.frequency_count = 0
+
+				period_update =	"UPDATE habit_details SET period_start = \'" + str(self.period_start) + "\', period_end = \'" + str(self.period_end) + "\', frequency_count = \'" + str(self.frequency_count) + "\'  WHERE habit_id = \'" + self.habit_id + "\';"
 
 				self.cursor.execute(period_update)
 				self.connection.commit()
@@ -74,14 +75,14 @@ class Habit():
 
 	def check_habit_status(self):
 		''' Function to adjust habit status'''
-
+		
 		# Only check for status after period is over.
-		if (self.today - self.period_start) >= timedelta(days = self.period):
+		if self.today - self.period_start >= timedelta(days = self.period):
 
 		# Check if the habit was performed enough times.
 		# during the period.
-			if self.frequency_count >= self.frequency:
-						
+			if self.frequency_count >= self.frequency:	
+
 				status = 'good'
 				self.increase_habit_streak()
 
@@ -90,10 +91,8 @@ class Habit():
 				status = 'broken'
 				self.reset_habit_streak()
 			
-			# Reset frequency_count for new period.
-			frequency_count = '0'	
 
-			period_update =	"UPDATE habit_details SET  frequency_count = \'" + frequency_count + "\', status = \'" + status + "\' WHERE habit_id = \'" + self.habit_id + "\';"
+			period_update =	"UPDATE habit_details SET status = \'" + status + "\' WHERE habit_id = \'" + self.habit_id + "\';"
 
 			self.cursor.execute(period_update)
 			self.connection.commit()
@@ -102,9 +101,10 @@ class Habit():
 
 	def increase_habit_streak(self):
 		''' Function to increase habit streak.''' 
+
 		# Streak count is how many periods a habit has been completed in a row.
-		# Streak will only increase when a habit has been succesfully performe over 
-		# the determined period of time.
+		# Streak will only increase when a habit has been succesfully performe with the correct frequency over 
+		# the specified period of time.
 
 		# Retrive habit streak count.
 		rows = self.cursor.execute("SELECT streak_count, longest_streak FROM habit_details WHERE habit_id = ?", self.habit_id).fetchall()
@@ -310,12 +310,16 @@ class Habit():
 
 	def current_habit(self):
 		''' Function to display current habits.''' 
+		
 		current_habit_query = self.cursor.execute("SELECT username, habit_id, habit_name, period, frequency, start_date, status FROM habit_details WHERE username = ?",(self.username,)).fetchall()
 		
+		# Convert query into dataframe.
 		current_habit_df = pd.DataFrame(current_habit_query, columns = ['username', 'habit_id', 'habit_name', 'period', 'frequency', 'start_date', 'status'])
+		
 		print ('\n',current_habit_df.to_string(index=False),'\n')
 
-		
+		return	current_habit_df
+
 
 	def habits_by_periodicity(self):
 		''' Function to display habits filter by periodicity.'''
@@ -327,7 +331,10 @@ class Habit():
 		if len(habit_query) != 0:
 
 			habit_period_df = pd.DataFrame(habit_query, columns = ['username', 'habit_id', 'habit_name', 'period', 'frequency', 'start_date', 'status'])
+			
 			print ('\n',habit_period_df.to_string(index=False),'\n')
+
+			return habit_period_df
 
 		else: 
 
@@ -355,14 +362,18 @@ class Habit():
 		current_habit_df = pd.DataFrame(streak_query, columns = ['username', 'habit_id', 'habit_name', 'streak_count', 'status'])
 		print ('\n',current_habit_df.to_string(index=False), '\n')
 
+		return	current_habit_df
+
 	
 	def historical_streaks(self):
 		''' Function to display historical habits of all habits.'''
 
 		streak_query = self.cursor.execute("SELECT username, habit_id, habit_name, longest_streak FROM habit_details WHERE username = ?",(self.username,)).fetchall()
 		
-		current_habit_df = pd.DataFrame(streak_query, columns = ['username', 'habit_id', 'habit_name', 'longest_historical_streak'])
-		print ('\n',current_habit_df.to_string(index=False), '\n')
+		historical_streak_df = pd.DataFrame(streak_query, columns = ['username', 'habit_id', 'habit_name', 'longest_historical_streak'])
+		print ('\n',historical_streak_df.to_string(index=False), '\n')
+
+		return historical_streak_df
 
 
 	def habit_log(self):
@@ -374,9 +385,7 @@ class Habit():
 		habit_id_df = pd.DataFrame(habit_id_query, columns = ['username', 'habit_id'])
 		print ('\n',habit_id_df.to_string(index=False), '\n')
 
-
 		habit_id = input('Select habit: ')
-
 
 		# Get habit streak.
 		streak_query = self.cursor.execute("SELECT * FROM habit_log WHERE username = ? AND habit_id =?",(self.username,habit_id)).fetchall()
@@ -384,6 +393,7 @@ class Habit():
 		# Create dataframe and display to user.
 		current_habit_df = pd.DataFrame(streak_query, columns = ['username', 'habit_id', 'habit_name', 'check_date'])
 		print ('\n',current_habit_df.to_string(index=False), '\n')
+
 
 
 
@@ -480,9 +490,9 @@ class Habit():
 
 if __name__ == '__main__':
 
-	file_drawing = open('bad_habits.txt', 'r')
-	print(file_drawing.read())
-	file_drawing.close()
+	#file_drawing = open('bad_habits.txt', 'r')
+	#print(file_drawing.read())
+	#file_drawing.close()
 
 	h = Habit()
 

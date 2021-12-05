@@ -50,7 +50,6 @@ py habit_tracker.py
 
 ## Usage
 
-
 The Habit Tracker app comes with a default user (username: 'root', password: 'root'). The account root has 5 predefine habits and 4 weeks of tracked data. This account could be used by a potential new user to explore the app capabilities without the necesity of creating a personal account. 
 
 First, the user will encounter a login menu with a login and sign-up option. New users will have to create an account first, and then login with their credentials.

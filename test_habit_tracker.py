@@ -104,8 +104,6 @@ class TestHabit(unittest.TestCase):
 		pd.testing.assert_frame_equal(test_df, expected_df)
 
 
-
-
 if __name__ == '__main__':
 
 	unittest.main()

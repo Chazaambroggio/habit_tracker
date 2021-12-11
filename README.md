@@ -19,6 +19,8 @@ The following instructions only apply to windows machines.
 
 Download the app's files from the following Github repository.
 
+In an open terminal do the following:
+
 ```bash
 git clone https://github.com/Chazaambroggio/habit_tracker.git
 ````
@@ -69,3 +71,24 @@ The Analytics module offers a submenu with different analytics capabilities.
 - Historical longest streak.
 - Check-off habit log.
 
+
+## Testing
+
+To ensure the quality of the testing it is recommended that you delete any existing 'habit_database'. When no database exist, the script will create a new database, preload it with the predefine root data, and adjust the habit periods and status. This step is relevant since part of the testing includes checking-off a habit. To perform the testing you must log-in with the default username of 'root' with the password 'root'. Lastly, please pay close attention to the instructions given at each step of the testing process, such as instructions to enter specific habits and/or periods. Part of the testing includes, checking-off a habit 
+
+In an open terminal do the following:
+
+Navegate to the location where the file habit_tracker was cloned into your pc.
+```bash
+cd habit_tracker
+````
+
+Activate the virtual environment created during the installation process.
+```bash
+venv\Scripts\activate
+```
+
+Lunch the test_habit_tracker.py.
+```bash
+py test_habit_tracker.py
+```

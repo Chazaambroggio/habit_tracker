@@ -80,7 +80,12 @@ class Habit():
 
 	def check_habit_status(self):
 		''' Function to adjust habit status'''
-		
+
+		# Note: habit status are only updated at the end of the period
+		# otherwise a habit status would always be 'broken' at the beginning 
+		# of the priod while frequency > than frequency count. 
+		# That is not proper functioning. 
+			
 		# Only check for status after period is over.
 		if self.today - self.period_start >= timedelta(days = self.period):
 
@@ -233,7 +238,7 @@ class Habit():
 			
 		# Wait two and a half seconds and clean console.
 		time.sleep(2.5)
-		self.clearConsole()
+		self.clearConsole() 
 		
 
 	
@@ -271,12 +276,38 @@ class Habit():
 			print('\nPeriod: indicates the timeframe in which you expect to perform a habit X number of times. Ex: yearly, monthly, weekly, daily.')
 			print('\nFrequency: indicates the how many time you expect to perform a habit in a given period. Ex: 3 times a week, 1 time a day, etc.')
 
-			# Asking user for habit periodicity (integer).
-			period = int(input('\nPlease introuduce the habit period in days format (Ex: Yearly = 364 ; Monthly = 30 ; Weekly = 7; Daily = 1): '))
+			# Loop used to ensure acceptable answer.
+			while True:
 
-			# Asking user for habit frequency (integer).
-			frequency = int(input('\nPlease introduce the habit frequency (Ex: 3 times a week = 3; 2 times a day = 2, 1 time a year = 1): '))
+				# Asking user for habit periodicity (integer).
+				period = input('\nPlease introuduce the habit period in days format using numbers (Ex: Yearly = 364 ; Monthly = 30 ; Weekly = 7; Daily = 1): ')
 
+				# Checking for a numeric answer.
+				if period.isnumeric() == True:
+					break
+
+				else: 
+					# Wait and clear.
+					print('Please enter a number.')
+					time.sleep(2)
+					self.clearConsole()
+
+			# Loop used to ensure acceptable answer.
+			while True:
+
+				# Asking user for habit frequency (integer).
+				frequency = int(input('\nPlease introduce the habit frequency (Ex: 3 times a week = 3; 2 times a day = 2, 1 time a year = 1): '))
+
+				if frequency.isnumeric() == True:
+					break 
+
+				else:
+					# Wait and clear.
+					print('Please enter a number.')
+					time.sleep(2)
+					self.clearConsole()
+
+					
 			correct = input('\nIs the above information correct? y/n or exit: ')
 
 			if correct == 'y':
@@ -376,9 +407,7 @@ class Habit():
 
 				# Clean console.
 				self.clearConsole()
-				return
-
-		return	current_habit_df
+				return current_habit_df
 
 
 	def habits_by_periodicity(self):

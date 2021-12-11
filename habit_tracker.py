@@ -7,8 +7,6 @@ from login import Login
 import os
 import time
 
-
-
 class Habit():	
 
 	def __init__(self):
@@ -296,7 +294,7 @@ class Habit():
 			while True:
 
 				# Asking user for habit frequency (integer).
-				frequency = int(input('\nPlease introduce the habit frequency (Ex: 3 times a week = 3; 2 times a day = 2, 1 time a year = 1): '))
+				frequency = input('\nPlease introduce the habit frequency (Ex: 3 times a week = 3; 2 times a day = 2, 1 time a year = 1): ')
 
 				if frequency.isnumeric() == True:
 					break 
@@ -316,7 +314,7 @@ class Habit():
 				start_date = datetime.now() #.date()
 
 				# increase start period plus 1 period.
-				period_end = start_date + timedelta(days=period)
+				period_end = start_date + timedelta(days=int(period))
 
 				status = 'good'
 
@@ -342,6 +340,10 @@ class Habit():
 				# Clean console and return to Main Menu.
 				self.clearConsole()
 				break
+
+			# Clean console with incorrect info and return to top of loop.
+			time.sleep(1.5)
+			self.clearConsole()
 
 
 	def remove_habit(self):
